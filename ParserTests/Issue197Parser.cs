@@ -9,24 +9,20 @@ using Xunit.Sdk;
 namespace ParserTests
 {
 
-    [Lexer(IgnoreWS = true,IgnoreEOL = true)]
+    [Lexer(IgnoreWS = true,IgnoreEOL = true,KeyWordIgnoreCase = false)]
     public enum Issue197Token
     {
         [Lexeme(GenericToken.Identifier,IdentifierType.Alpha)]
         ID = 100,
         
         [Lexeme(GenericToken.KeyWord,"first")]
-        A = 1, 
+        FIRST = 1, 
         [Lexeme(GenericToken.KeyWord,"endfirst")]
-        B = 2,
+        ENDFIRST = 2,
         [Lexeme(GenericToken.KeyWord,"second")]
-        C = 3,
+        SECOND = 3,
         [Lexeme(GenericToken.KeyWord,"endsecond")]
-        D = 4,
-        [Lexeme(GenericToken.KeyWord,"E")]
-        E = 5,
-        [Lexeme(GenericToken.KeyWord,"F")]
-        F = 6,
+        ENDSECOND = 4,
         [Lexeme(GenericToken.KeyWord,"nobody")]
         NOBODY = 42,
         
@@ -69,13 +65,13 @@ namespace ParserTests
 /head";
         }
         
-        [Production("first : A[d] ID B[d]")]
+        [Production("first : FIRST[d] ID ENDFIRST[d]")]
         public string First(Token<Issue197Token> a)
         {
             return "1st ["+a.Value+"] /1st";
         }
         
-        [Production("second : C[d] ID D[d]")]
+        [Production("second : SECOND[d] ID ENDSECOND[d]")]
         public string Second(Token<Issue197Token> a)
         {
             return "2nd ["+a.Value+"] /2nd";

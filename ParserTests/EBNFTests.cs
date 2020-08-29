@@ -1101,11 +1101,11 @@ namespace ParserTests
             string source = @"
 head
     first
-        firstelement
-    endifrst
+        fstelement
+    endfirst
     second
-        secondelement
-    ensecond
+        sndelement
+    endsecond
 endhead
 rules
  prop proper properties
