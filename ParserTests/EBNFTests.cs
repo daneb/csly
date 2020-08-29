@@ -1086,5 +1086,42 @@ namespace ParserTests
             ;
 
         }
+        
+        [Fact]
+        public void TestIssue197()
+        {
+            var parserInstance = new Issue197Parser();
+            var builder = new ParserBuilder<Issue197Token, string>();
+            var resultBuild = builder.BuildParser(parserInstance, ParserType.EBNF_LL_RECURSIVE_DESCENT, "rules");
+            
+            Assert.True(resultBuild.IsOk);
+            Assert.NotNull(resultBuild.Result);
+            var parser = resultBuild.Result;
+
+            string source = @"
+head
+    first
+        firstelement
+    endifrst
+    second
+        secondelement
+    ensecond
+endhead
+rules
+ prop proper properties
+endrules
+";
+            
+            var test = parser.Parse(source);
+
+            Assert.True(test.IsError);
+            Assert.NotEmpty(test.Errors);
+            var containsEOSError = test.Errors.Exists(x =>
+                x is UnexpectedTokenSyntaxError<TokenType> tok && tok.UnexpectedToken.IsEOS);
+            Assert.True(containsEOSError);
+                
+            ;
+
+        }
     }
 }
