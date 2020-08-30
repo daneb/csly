@@ -32,17 +32,17 @@ namespace ParserTests
         [Lexeme(GenericToken.KeyWord,"endhead")]
         ENDHEAD = 51,
         
-        [Lexeme(GenericToken.KeyWord,"rules")]
-        RULES = 60,
+        [Lexeme(GenericToken.KeyWord,"rule")]
+        RULE = 60,
         
-        [Lexeme(GenericToken.KeyWord,"endrules")]
-        ENDRULES = 61,
+        [Lexeme(GenericToken.KeyWord,"endrule")]
+        ENDRULE = 61,
         
     }
     
     public class Issue197Parser
     {
-        [Production("rules : head? bodies*")]
+        [Production("rules : head? rule*")]
         public string Rules(ValueOption<string> head, List<string> body)
         {
             var h = head.Match(
@@ -51,14 +51,14 @@ namespace ParserTests
             var hs = h.ToString();
             var b = string.Join("\n\t",body.ToArray<string>());
             b = "h\nbody\n" + b + "\n/body";
-            return b;
+            return hs+b;
         }
 
         [Production("head : HEAD[d] first? second? ENDHEAD[d]")]
         public string head(ValueOption<string> first, ValueOption<string> second)
         {
             var f = first.Match((x) => x, () => "no first/");
-            var s = first.Match((x) => x, () => "no second/");
+            var s = second.Match((x) => x, () => "no second/");
             return $@"head
     {f}
     {s}
@@ -77,8 +77,8 @@ namespace ParserTests
             return "2nd ["+a.Value+"] /2nd";
         }
 
-        [Production("bodies : RULES[d] ID+ ENDRULES[d] ")]
-        public string Bodies(List<Token<Issue197Token>> body)
+        [Production("rule : RULE[d] ID+ ENDRULE[d] ")]
+        public string Rule(List<Token<Issue197Token>> body)
         {
             return body.Select((Token<Issue197Token> x) => x.Value)
                 .Aggregate(((string x1, string x2) => x1 + "\n" + x2));

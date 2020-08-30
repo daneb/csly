@@ -1107,9 +1107,9 @@ head
         sndelement
     endsecond
 endhead
-rules
+rule
  prop proper properties
-endrules
+endrule
 ";
             
             var test = parser.Parse(source);
