@@ -331,8 +331,6 @@ namespace ParserExample
 
         public static BuildResult<Parser<ExpressionToken, int>> buildSimpleExpressionParserWithContext()
         {
-
-
             var StartingRule = $"{typeof(SimpleExpressionParserWithContext).Name}_expressions";
             var parserInstance = new SimpleExpressionParserWithContext();
             var builder = new ParserBuilder<ExpressionToken, int>();
@@ -652,9 +650,35 @@ namespace ParserExample
             }
             ;
         }
+
+        private static void TestErrorReporting() {
+            var StartingRule = $"{typeof(SimpleExpressionParser).Name}_expressions";
+            var parserInstance = new SimpleExpressionParser();
+            var builder = new ParserBuilder<ExpressionToken, double>();
+            var parser = builder.BuildParser(parserInstance, ParserType.LL_RECURSIVE_DESCENT, StartingRule);
+
+        if (parser.IsOk) {
+            var result = parser.Result.Parse("1 ( 1");
+
+            if (result.IsOk) {
+                Console.WriteLine(result.Result);
+            }
+                else {
+                    result.Errors.ForEach(e => Console.WriteLine(e.ErrorMessage));
+                }
+
+        }
+        else {
+            Console.WriteLine("KO");
+            foreach(var e in parser.Errors) {
+                Console.WriteLine(e.Message);
+            }
+        }
+        }
         
         private static void Main(string[] args)
         {
+            TestErrorReporting();
             //TestContextualParser();
             //TestTokenCallBacks();
             //test104();
@@ -671,7 +695,7 @@ namespace ParserExample
             // TestManyString();
             
           //  TestDoubleExponent();
-Test192();
+//Test192();
 
             // TestFactorial();
             // TestThreadsafeGeneric();

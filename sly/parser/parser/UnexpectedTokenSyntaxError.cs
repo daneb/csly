@@ -10,6 +10,8 @@ namespace sly.parser
     {
         public UnexpectedTokenSyntaxError(Token<T> unexpectedToken, params T[] expectedTokens)
         {
+            string expecting = string.Join(" ",expectedTokens);
+            Console.WriteLine($"unexpected {unexpectedToken} , expecting {expecting}");
             UnexpectedToken = unexpectedToken;
             if (expectedTokens != null)
             {
